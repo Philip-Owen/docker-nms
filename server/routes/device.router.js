@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const devRes = await Device.findAll();
+    const devRes = await Device.findAll({ order: [["id", "ASC"]] });
     res.send(devRes);
   } catch (error) {
     const { message } = error.errors[0];
