@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import TableCell from "@material-ui/core/TableCell";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import styled from "styled-components";
 
-function Device({ device }) {
+function Device({ device, pingDevice }) {
+  const [loading, setLoading] = useState(false);
+  const ping = async () => {
+    setLoading(true);
+    await pingDevice(device);
+    setLoading(false);
+  };
   return (
     <>
       <TableCell>{device.hostname}</TableCell>
@@ -16,6 +22,9 @@ function Device({ device }) {
         ) : (
           <HighlightOffIcon style={{ color: "red" }} />
         )}
+      </TableCell>
+      <TableCell>
+        {loading ? "Pinging..." : <button onClick={ping}>Ping</button>}
       </TableCell>
     </>
   );
