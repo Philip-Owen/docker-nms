@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 
 const initialDeviceState = {
@@ -41,21 +42,24 @@ function AddDevice() {
       {error !== null ? <h3>{error}</h3> : null}
       {success ? <h3>Device Added</h3> : null}
       <DeviceForm onSubmit={handleSubmit}>
-        <input
+        <TextField
+          variant="outlined"
           type="text"
           placeholder="Hostname"
           name="hostname"
           value={device.hostname}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          variant="outlined"
           type="text"
           placeholder="IP Address"
           name="ipAddress"
           value={device.ipAddress}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          variant="outlined"
           type="text"
           placeholder="Model"
           name="model"
@@ -71,7 +75,7 @@ function AddDevice() {
 const DeviceForm = styled.form`
   display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 300px;
 `;
 
 export default AddDevice;
