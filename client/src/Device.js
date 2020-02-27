@@ -24,6 +24,11 @@ function Device({ device, pingDevice }) {
         )}
       </TableCell>
       <TableCell>
+        {device.lastChecked
+          ? new Date(device.lastChecked).toLocaleString()
+          : null}
+      </TableCell>
+      <TableCell>
         {loading ? "Pinging..." : <button onClick={ping}>Ping</button>}
       </TableCell>
     </>

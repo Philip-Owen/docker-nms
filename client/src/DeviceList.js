@@ -11,7 +11,7 @@ import Device from "./Device";
 
 function Devices() {
   const [deviceList, setDeviceList] = useState([]);
-  
+
   const pingDevice = async device => {
     console.log(device.ipAddress);
     const res = await fetch(`/api/ping/${device.ipAddress}`);
@@ -37,6 +37,7 @@ function Devices() {
               <TableCell>IP Address</TableCell>
               <TableCell>Model</TableCell>
               <TableCell>Reachability</TableCell>
+              <TableCell>Last Checked</TableCell>
               <TableCell>Test</TableCell>
             </TableRow>
           </TableHead>

@@ -10,7 +10,7 @@ router.get("/:ip", async (req, res) => {
     min_reply: 5
   });
   const devRes = await Device.update(
-    { reachability: pingRes.alive },
+    { reachability: pingRes.alive, lastChecked: Date.now() },
     { where: { ipAddress: ip } }
   );
 

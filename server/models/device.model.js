@@ -16,7 +16,8 @@ const Device = sequelize.define("Device", {
     validate: {
       isIPv4: true
     },
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   model: {
     type: Sequelize.STRING,
@@ -26,6 +27,10 @@ const Device = sequelize.define("Device", {
   reachability: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  lastChecked: {
+    type: Sequelize.DATE,
+    allowNull: true
   }
 });
 
