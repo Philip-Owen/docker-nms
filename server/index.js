@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const db = require("./db");
+require("./cron-jobs")();
 require("dotenv").config();
 
 const DeviceRouter = require("./routes/device.router");
