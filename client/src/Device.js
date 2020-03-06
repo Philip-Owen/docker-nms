@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import TableCell from "@material-ui/core/TableCell";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import { PulseLoader } from "react-spinners";
 
 function Device({ device, pingDevice }) {
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,7 @@ function Device({ device, pingDevice }) {
       <TableCell>{device.hostname}</TableCell>
       <TableCell>{device.ipAddress}</TableCell>
       <TableCell>{device.model}</TableCell>
-      <TableCell>
+      <TableCell align="center">
         {device.reachability ? (
           <CheckCircleIcon style={{ color: "green" }} />
         ) : (
@@ -28,8 +30,14 @@ function Device({ device, pingDevice }) {
           ? new Date(device.lastChecked).toLocaleString()
           : null}
       </TableCell>
-      <TableCell>
-        {loading ? "Pinging..." : <button onClick={ping}>Ping</button>}
+      <TableCell align="center">
+        {loading ? (
+          <PulseLoader size={10} />
+        ) : (
+          <Button variant="outlined" size="small" onClick={ping}>
+            Ping
+          </Button>
+        )}
       </TableCell>
     </>
   );
