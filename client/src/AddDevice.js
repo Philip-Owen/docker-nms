@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { api } from "./api_conf";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -20,30 +21,41 @@ function AddDevice() {
     setDevice({ ...device, [name]: value });
   };
   const handleSubmit = async e => {
-    console.log("ran");
     e.preventDefault();
-    const res = await fetch("/api/devices", {
+    const res = await fetch(`${api}/api/devices`, {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(device)
     });
-    if (res.status !== 400) {
-      console.log(res);
+    if (res.status === 201) {
       setError(null);
       setDevice(initialDeviceState);
       setSuccess(true);
     } else {
-      const err = await res.json();
-      console.log(err);
-      setError(err.error);
+      if (res.status === 500) {
+        setError(handleError(null));
+      } else {
+        const err = await res.json();
+        setError(handleError(err.error));
+      }
+    }
+  };
+  const handleError = error => {
+    switch (error) {
+      case "ipAddress must be unique":
+        return `A device with the IP address "${device.ipAddress}" is already in monitoring.`;
+      case "hostname must be unique":
+        return `A device with the hostname "${device.hostname}" is already in monitoring.`;
+      default:
+        return "Internal Server Error. Please verify that the server and database are running.";
     }
   };
   return (
     <div>
       <h1>Add A Device</h1>
-      {error !== null ? <h3>{error}</h3> : null}
+      {error !== null ? <h3 style={{ color: "red" }}>{error}</h3> : null}
       {success ? <h3>Device Added</h3> : null}
       <DeviceForm onSubmit={handleSubmit}>
         <FormGroupStyled>
@@ -65,13 +77,15 @@ function AddDevice() {
           />
           <TextField
             type="text"
-            placeholder="Model"
+            placeholder="Model (Optional)"
             name="model"
             value={device.model}
             onChange={handleChange}
           />
         </FormGroupStyled>
-        <Button variant="contained">Add Device</Button>
+        <Button type="submit" variant="contained">
+          Add Device
+        </Button>
       </DeviceForm>
     </div>
   );

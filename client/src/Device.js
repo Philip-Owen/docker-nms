@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import TableCell from "@material-ui/core/TableCell";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Button from "@material-ui/core/Button";
 import { PulseLoader } from "react-spinners";
 
-function Device({ device, pingDevice }) {
+function Device({ device, pingDevice, deleteDevice }) {
   const [loading, setLoading] = useState(false);
   const ping = async () => {
     setLoading(true);
     await pingDevice(device);
     setLoading(false);
+  };
+  const del = async () => {
+    deleteDevice(device.id);
   };
   return (
     <>
@@ -38,6 +40,11 @@ function Device({ device, pingDevice }) {
             Ping
           </Button>
         )}
+      </TableCell>
+      <TableCell align="center">
+        <Button variant="outlined" size="small" color="secondary" onClick={del}>
+          Delete
+        </Button>
       </TableCell>
     </>
   );

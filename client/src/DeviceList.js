@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { api } from "./api_conf";
 import styled from "styled-components";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -13,23 +14,22 @@ function Devices() {
   const [deviceList, setDeviceList] = useState([]);
 
   const pingDevice = async device => {
-    const res = await fetch(`/api/ping/${device.ipAddress}`);
-    getSingleDevice(device.id);
+    await fetch(`${api}/api/ping/${device.ipAddress}`);
+    getDevices();
   };
   const getDevices = async () => {
-    const res = await fetch("/api/devices");
+    const res = await fetch(`${api}/api/devices`);
     const data = await res.json();
     setDeviceList(data);
   };
-  const getSingleDevice = async id => {
-    const res = await fetch(`/api/devices/${id}`);
-    const data = await res.json();
-    setDeviceList(d => {
-      if (d.id === id) {
-        return { ...data[0] };
+  const deleteDevice = async id => {
+    await fetch(`${api}/api/devices/${id}`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json"
       }
-      return d;
     });
+    getDevices();
   };
   useEffect(() => {
     getDevices();
@@ -59,13 +59,20 @@ function Devices() {
               <TableCell align="center">
                 <b>Test</b>
               </TableCell>
+              <TableCell align="center">
+                <b>Delete Device</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {deviceList.length > 0
               ? deviceList.map(d => (
                   <TableRow key={d.id} style={{ height: 63 }}>
-                    <Device device={d} pingDevice={pingDevice} />
+                    <Device
+                      device={d}
+                      pingDevice={pingDevice}
+                      deleteDevice={deleteDevice}
+                    />
                   </TableRow>
                 ))
               : null}
@@ -78,10 +85,6 @@ function Devices() {
 
 const DeviceTable = styled(Table)`
   max-width: 850px;
-`;
-
-const HeadCell = styled(TableCell)`
-  font-weight: bold;
 `;
 
 export default Devices;
