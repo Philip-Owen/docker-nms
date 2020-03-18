@@ -1,0 +1,31 @@
+version: "3"
+services:
+  server:
+    build: ./server
+    ports:
+      - 8081:5000
+    links:
+      - db
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=postgres
+      - DATABASE_PASS=
+    volumes:
+      - ./server:/app
+  db:
+    build: ./db
+  client:
+    build: ./client
+    ports:
+      - 8080:80
+# Needed if you want to control the subnet range that docker will use when creating the containers.
+# You might need to change this if you the devices you want to monitor overlap with the default
+# subnet range of 172.20.0.0/16.
+# networks:
+#   default:
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: 192.168.10.0/29 # Change to match subnet needed
+#           gateway: 192.168.10.1 # Change to match gateway needed or can be removed and docker will assign the gateway
