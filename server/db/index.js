@@ -3,10 +3,10 @@ const db = {};
 
 const sequelize = new Sequelize(
   "nms",
-  process.env.DB_USER,
-  process.env.DB_PASS,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASS,
   {
-    host: "localhost",
+    host: process.env.DATABASE_HOST || "localhost",
     dialect: "postgres",
     define: {
       timestamps: false
