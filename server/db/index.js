@@ -9,9 +9,9 @@ const sequelize = new Sequelize(
     host: process.env.DATABASE_HOST || "localhost",
     dialect: "postgres",
     define: {
-      timestamps: false
+      timestamps: false,
     },
-    logging: false
+    logging: false,
   }
 );
 
@@ -20,13 +20,18 @@ db.Sequelize = Sequelize;
 
 sequelize.sync();
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch(err => {
-    console.error("Unable to connect to the database:", err);
-  });
+function waitForPostgres() {
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log("Connection has been established successfully.");
+    })
+    .catch((err) => {
+      console.error("Unable to connect to the database, retrying...", err);
+      waitForPostgres();
+    });
+}
+
+waitForPostgres();
 
 module.exports = db;
