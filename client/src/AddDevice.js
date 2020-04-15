@@ -8,26 +8,26 @@ import styled from "styled-components";
 const initialDeviceState = {
   hostname: "",
   ipAddress: "",
-  model: ""
+  model: "",
 };
 
 function AddDevice() {
   const [device, setDevice] = useState(initialDeviceState);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-  const handleChange = e => {
+  const handleChange = (e) => {
     setSuccess(false);
     const { name, value } = e.target;
     setDevice({ ...device, [name]: value });
   };
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await fetch(`${api}/api/devices`, {
       method: "post",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(device)
+      body: JSON.stringify(device),
     });
     if (res.status === 201) {
       setError(null);
@@ -42,7 +42,7 @@ function AddDevice() {
       }
     }
   };
-  const handleError = error => {
+  const handleError = (error) => {
     switch (error) {
       case "ipAddress must be unique":
         return `A device with the IP address "${device.ipAddress}" is already in monitoring.`;
@@ -61,6 +61,8 @@ function AddDevice() {
         <FormGroupStyled>
           <TextField
             required
+            variant="outlined"
+            size="small"
             type="text"
             placeholder="Hostname"
             name="hostname"
@@ -69,6 +71,8 @@ function AddDevice() {
           />
           <TextField
             required
+            variant="outlined"
+            size="small"
             type="text"
             placeholder="IP Address"
             name="ipAddress"
@@ -77,6 +81,8 @@ function AddDevice() {
           />
           <TextField
             type="text"
+            variant="outlined"
+            size="small"
             placeholder="Model (Optional)"
             name="model"
             value={device.model}
@@ -96,7 +102,6 @@ const DeviceForm = styled.form`
 `;
 
 const FormGroupStyled = styled(FormGroup)`
-  margin: 25px;
   width: 400px;
   * {
     margin: 10px 0;
