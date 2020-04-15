@@ -10,10 +10,10 @@ services:
       - DATABASE_HOST=db
       - DATABASE_USER=postgres
       - DATABASE_PASS=
-    volumes:
-      - ./server:/app
   db:
     build: ./db
+    volumes:
+      - ./postgres-data:/var/lib/postgresql
   client:
     build: ./client
     ports:
@@ -27,5 +27,5 @@ services:
 #     ipam:
 #       driver: default
 #       config:
-#         - subnet: 192.168.10.0/29 # Change to match subnet needed
-#           gateway: 192.168.10.1 # Change to match gateway needed or can be removed and docker will assign the gateway
+#         - subnet: 172.20.0.0/16
+
