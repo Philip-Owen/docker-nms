@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { api } from "./api_conf";
+
+import { api, listenForCron } from "./api_conf";
 import styled from "styled-components";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -13,7 +14,7 @@ import Device from "./Device";
 function Devices() {
   const [deviceList, setDeviceList] = useState([]);
 
-  const pingDevice = async device => {
+  const pingDevice = async (device) => {
     await fetch(`${api}/api/ping/${device.ipAddress}`);
     getDevices();
   };
@@ -22,17 +23,18 @@ function Devices() {
     const data = await res.json();
     setDeviceList(data);
   };
-  const deleteDevice = async id => {
+  const deleteDevice = async (id) => {
     await fetch(`${api}/api/devices/${id}`, {
       method: "delete",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
     getDevices();
   };
   useEffect(() => {
     getDevices();
+    listenForCron((err, data) => (err ? null : setDeviceList(data)));
   }, []);
   return (
     <div>
@@ -66,7 +68,7 @@ function Devices() {
           </TableHead>
           <TableBody>
             {deviceList.length > 0
-              ? deviceList.map(d => (
+              ? deviceList.map((d) => (
                   <TableRow key={d.id} style={{ height: 63 }}>
                     <Device
                       device={d}

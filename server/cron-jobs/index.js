@@ -9,7 +9,7 @@ async function pingAllCronJob() {
       const { ipAddress } = dev.dataValues;
       const pingRes = await ping.promise.probe(ipAddress, {
         timeout: 5,
-        min_reply: 5
+        min_reply: 5,
       });
       await Device.update(
         { reachability: pingRes.alive, lastChecked: Date.now() },
@@ -19,8 +19,10 @@ async function pingAllCronJob() {
   }
 }
 
-module.exports = () => {
-  cron.schedule("*/15 * * * *", () => {
-    pingAllCronJob();
+module.exports = async (io) => {
+  cron.schedule("*/15 * * * *", async () => {
+    await pingAllCronJob();
+    const devices = await Device.findAll({ order: [["id", "ASC"]] });
+    io.sockets.emit("updated", devices);
   });
 };
