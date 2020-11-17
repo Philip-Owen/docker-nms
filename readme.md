@@ -1,4 +1,4 @@
-# Docker NMS
+# Network Monitor
 
 A simple network monitoring tool.
 
